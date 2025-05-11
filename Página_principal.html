@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GANGA CAR</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; /* Le pone letra normal tipo Arial o similar en este caso */
+            background-image: url('photo-1572401611152-cf63d874b019.jpg'); /* Pone una foto de fondo */
+            background-size: cover; /* Hace que la foto cubra toda la pantalla */
+            background-position: center; /* Pone la foto en el centro para que no se vea torcida */
+            background-attachment: fixed; /* Hace que la foto no se mueva */
+            display: flex; /* Lo ponemos para organizar las cosas fácil */
+            justify-content: center; /* Centra todo horizontalmente */
+            align-items: center; /* Centra todo verticalmente */
+            height: 100vh; /* Ocupa toda la altura de la pantalla */
+            margin: 0; /* Quita los márgenes que ponen de normal*/
+}
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* Para poner el fono de un blanco casi transparente */
+            padding: 30px; /* Para poner un espacio interno en todos lados */
+            border-radius: 10px; /* Para poner las esquinas de los cuadrados redondeadas */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Esto lo hemos usado para poner una sombra alrededor, lo hemos buscado como hacerlo porque quedaba estético */
+            width: 350px; /* Para el ancho */
+            text-align: center; /* Para poner todo el texto centrado */
+        }
+
+        h1 {
+            color: #333; /* Para poner el color de texto gris oscuro */
+            margin-bottom: 5px; /* Para poner un poco de espacio debajo del título */
+        }
+
+        .slogan {
+            color: #666; /* Para poner el texto gris */
+            font-style: italic; /* Para poner la letra en cursiva */
+            margin-bottom: 20px; /* Para poner un espacio un poco más grande abajo */
+        }
+
+        input, select {
+            width: 100%; /* Esto para que ocupe todo el ancho de la pantalla */
+            padding: 10px; /* Para poner un espacio interno en todos lados */
+            margin: 8px 0; /* Para poner un margen arriba y abajo */
+            border: 1px solid #ddd; /* Para poner un borde gris un poco más claro */
+            border-radius: 4px; /* Para poner las esquinas un poco redondeadas */
+            box-sizing: border-box; /* Para que el padding no afecte el ancho */
+        }
+
+        button {
+            background-color: #4CAF50; /* Para poner el fondo verde */
+            color: white; /* Para poner el texto blanco */
+            padding: 10px 15px; /* Para el espacio interno */
+            border: none; /* Para no poner borde */
+            border-radius: 4px; /*  Para poner las esquinas un poco redondeadas */
+            cursor: pointer; /* Para cambiar el cursor al pasar el ratón */
+            margin-top: 10px; /* Para dejar un espacio arriba */
+        }
+
+        button:disabled {
+            background-color: #cccccc; /* Para poner el fondo gris cuando está desactivado */
+            cursor: not-allowed; /* Para el cursor de "no permitido" */
+        }
+
+        .error {
+            color: red; /* Para cuando te de error el texto sea rojo */
+            margin-top: 10px; /* Para poner un espacio arriba */
+        }
+
+        .register-link {
+            margin-top: 15px; /* Para poner más espacio arriba del enlace */
+        }
+
+        .register-link a {
+            color: #4CAF50; /*Para poner el texto verde como el botón */
+            text-decoration: none; /* Para que no tenga subrayado */
+        }
+
+        .register-link a:hover {
+            text-decoration: underline; /* Para un subrayado al pasar el ratón */
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container" id="login-container">
+        <!-- Este es el título principal -->
+        <h1>GANGA CAR</h1>
+        
+        <!-- Este es el slogan que va debajo del título -->
+        <p class="slogan">"Ganga Car, ponte en marcha."</p>
+    
+        <!-- EL formulario para logearse -->
+        <form id="login-form">
+            <!-- El campo para el usuario o email del inicio de sesión, es decir para cuando ya tienes la cuenta creada -->
+            <input type="text" id="login-username" placeholder="Nombre de usuario o correo electrónico" required>
+            
+            <!-- El campo para poner la contraseña en el inicio de sesión, además para que se vean puntitos -->
+            <input type="password" id="login-password" placeholder="Contraseña" required>
+            
+            <!-- El botón para enviar -->
+            <button type="submit" id="login-button" disabled>Aceptar</button>
+        </form>
+    
+        <!-- El mensaje de error cuando la cuenta no existe y hay que registrarse antes, es decir crearse una cuenta para poder meterte -->
+        <div id="login-error" class="error" style="display: none;">
+            Este usuario no existe, regístrate abajo
+        </div>
+    
+        <!-- El enlace para ir al registro -->
+        <div class="register-link">
+            <button id="register-button">Regístrate aquí</button>
+        </div>
+    </div>
+
+    
+    <!-- Esto es para el formulario de registro -->
+    <div class="container" id="register-container" style="display: none;">
+    <!-- El título en grande -->
+    <h1>REGISTRO</h1>
+
+    <!-- Aqui empieza el formulario para registrarse -->
+    <form id="register-form">
+        <!-- Esto es para poner el nombre -->
+        <input type="text" id="register-firstname" placeholder="Nombre" required>
+        
+        <!-- Para poner el apellido -->
+        <input type="text" id="register-lastname" placeholder="Apellido" required>
+        
+        <!-- Para escribir un nombre de usuario -->
+        <input type="text" id="register-username" placeholder="Nombre de usuario" required>
+        
+        <!-- Te indica el mensaje de error que aparece si el usuario ya existe -->
+        <div id="username-error" class="error" style="display: none;">Este nombre de usuario ya está en uso</div>
+        
+        <!-- Para introducir el correo -->
+        <input type="email" id="register-email" placeholder="Correo electrónico" required>
+        
+        <!-- Para poner la contraseña -->
+        <input type="password" id="register-password" placeholder="Contraseña" required>
+
+        <!-- Select para elegir país de donde eres -->
+        <select id="register-country" required>
+            <!-- Opción vacía que aparece antes de pichar para que te salgan los paises -->
+            <option value="" disabled selected>Selecciona tu país</option>
+            <!-- Opción para elegir España -->
+            <option value="es">España</option>
+            <!-- Opción para elegir Francia -->
+            <option value="fr">Francia</option>
+            <!-- Opción para elegir Alemania -->
+            <option value="de">Alemania</option>
+            <!-- Aquí se podrían meter más países si hace falta. -->
+        </select>
+
+        <!-- Aqui indica el mensaje de error que sale si falta algo en cualquier campo del registro. -->
+        <div id="register-error" class="error" style="display: none;">Rellena todos los campos</div>
+        
+        <!-- Botón para enviar el formulario (está desactivado al principio y hasta que no este todo rellenado y bien no se activa) -->
+        <button type="submit" id="register-submit" disabled>Aceptar</button>
+    </form>
+</div>
+
+
+<script>
+        // Esto es un array vacío, que vamos a usar como una base de datos falsa para guardar los usuarios registrados
+        let usersDatabase = [];
+
+        // Cargamos usuarios guardados previamente desde localStorage (para mantenerlos entre recargas)
+        if (localStorage.getItem('usersDatabase')) {
+            usersDatabase = JSON.parse(localStorage.getItem('usersDatabase'));
+        }
+
+        // Aquí guardamos en variables todos los elementos del formulario que usan los usuarios para logearse
+        // Para poder modificarlos después con javascript
+        const loginContainer = document.getElementById('login-container');
+        const loginForm = document.getElementById('login-form');
+        const loginUsername = document.getElementById('login-username');
+        const loginPassword = document.getElementById('login-password');
+        const loginButton = document.getElementById('login-button');
+        const loginError = document.getElementById('login-error');
+        const registerButton = document.getElementById('register-button');
+
+        // Aquí hacemos lo mismo pero con los elementos del formulario que usan los usuarios para registrarse en la web
+        const registerContainer = document.getElementById('register-container');
+        const registerForm = document.getElementById('register-form');
+        const registerFirstname = document.getElementById('register-firstname');
+        const registerLastname = document.getElementById('register-lastname');
+        const registerUsername = document.getElementById('register-username');
+        const registerEmail = document.getElementById('register-email');
+        const registerPassword = document.getElementById('register-password');
+        const registerCountry = document.getElementById('register-country');
+        const registerSubmit = document.getElementById('register-submit');
+        const registerError = document.getElementById('register-error');
+        const usernameError = document.getElementById('username-error');
+
+        // Esta función revisa si hay texto en usuario y contraseña para que te deje activar el botón de login
+        function checkLoginFields() {
+            // Si los dos campos tienen texto, disabled será falso es decir activo
+            loginButton.disabled = !(loginUsername.value.trim() && loginPassword.value.trim());
+        }
+
+        // Esta función revisa si todos los campos del registro están con texto o mejor dicho llenos
+        function checkRegisterFields() {
+            // allFilled será verdadero solo si todos los campos tienen valor
+            const allFilled = registerFirstname.value && registerLastname.value &&
+                            registerUsername.value && registerEmail.value &&
+                            registerPassword.value && registerCountry.value;
+            // El registerSubmit desactiva el botón si no están todos llenos
+            registerSubmit.disabled = !allFilled;
+            // Muestra u oculta el error según si están completos
+            registerError.style.display = allFilled ? 'none' : 'block';
+        }
+
+        // Esta función busca si un nombre de usuario ya existe en nuestra "base de datos" que hemos creado arriba
+        function checkUsernameAvailability(username) {
+            // Esto va a devolver verdadero si encuentra coincidencia en los datos
+            return usersDatabase.some(user => user.username === username);
+        }
+
+        // Cada vez que el usuario escriba algo en usuario/correo o password del login, valida los campos
+        loginUsername.addEventListener('input', checkLoginFields);
+        loginPassword.addEventListener('input', checkLoginFields);
+
+        // Aqui es lo mismo para cada campo del registro
+        registerFirstname.addEventListener('input', checkRegisterFields);
+        registerLastname.addEventListener('input', checkRegisterFields);
+        // Para el usuario además comprueba si ese usuario ya existe
+        registerUsername.addEventListener('input', function () {
+            checkRegisterFields();
+            // Aqui mostraría un error si el usuario ya existe
+            usernameError.style.display = checkUsernameAvailability(this.value.trim()) ? 'block' : 'none';
+        });
+        registerEmail.addEventListener('input', checkRegisterFields);
+        registerPassword.addEventListener('input', checkRegisterFields);
+        // El país usa 'change' porque es un select
+        registerCountry.addEventListener('change', checkRegisterFields);
+
+        // Cuando haces click en el botón de registro...
+        registerButton.addEventListener('click', function () {
+            // Oculta el login y muestra el formulario de registro
+            loginContainer.style.display = 'none';
+            registerContainer.style.display = 'block';
+        });
+
+        // Cuando envías el formulario de login...
+        loginForm.addEventListener('submit', function (e) {
+            e.preventDefault(); // Evita que se recargue la página
+
+            // Aquí guarda los valores quitando espacios
+            const usernameOrEmail = loginUsername.value.trim();
+            const password = loginPassword.value.trim();
+
+            // Busca en la base de datos si hay coincidencia en el usuario/email y en la contraseña
+            const user = usersDatabase.find(user =>
+                (user.username === usernameOrEmail || user.email === usernameOrEmail) &&
+                user.password === password
+            );
+
+            if (user) {
+                // Si encuentra el usuario, te saluda y te redirige a la siguiente página, donde están las marcas de los coches y los filtros.
+                alert(`Bienvenido ${user.firstname} ${user.lastname}! Redirigiendo a la página principal...`);
+                localStorage.setItem('loggedInUser', JSON.stringify(user)); // Guarda la sesión
+                window.location.href = "Busqueda_Coches/Busqueda_Coches.html";
+            } else {
+                // Si no, mostrará un mensaje de error
+                loginError.style.display = 'block';
+            }
+        });
+
+        // Cuando envías el formulario de registro...
+        registerForm.addEventListener('submit', function (e) {
+            e.preventDefault(); // Evita la recarga de la página
+
+            // Primero comprueba si el usuario ya existe
+            if (checkUsernameAvailability(registerUsername.value.trim())) {
+                usernameError.style.display = 'block';
+                return; // Si existe, termina aquí
+            }
+
+            // Crea un objeto con todos los datos del nuevo usuario
+            const newUser = {
+                firstname: registerFirstname.value.trim(),
+                lastname: registerLastname.value.trim(),
+                username: registerUsername.value.trim(),
+                email: registerEmail.value.trim(),
+                password: registerPassword.value.trim(),
+                country: registerCountry.value
+            };
+
+            // Agrega el nuevo usuario al array
+            usersDatabase.push(newUser);
+
+            // Guarda la base de datos actualizada en localStorage
+            localStorage.setItem('usersDatabase', JSON.stringify(usersDatabase));
+
+            // Guarda la sesión del usuario recién registrado
+            localStorage.setItem('loggedInUser', JSON.stringify(newUser));
+
+            // Te avisa que todo ha salido bien y te envía a la siguiente página
+            alert('Registro exitoso! Redirigiendo a la página principal...');
+            window.location.href = "Busqueda_Coches/Busqueda_Coches.html";
+        });
+
+        // En esta parte del script hemos mirado vídeos y nos hemos ayudado un poco de la IA
+        // porque queríamos asegurarnos que lo que estabamos poniendo estaba bien,
+        // lo que estaba mal nos lo ha corregido, pero hemos echo todo con nuestras manos :)
+</script>
+
+</body>
+</html>
+
+

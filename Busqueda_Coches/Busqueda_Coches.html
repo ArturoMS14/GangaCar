@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GANGA CAR - Página Principal</title>
+    <style>
+        /* Esto es una forma que hemos usado para resetear todos los elementos y así no tengan los márgenes ni los rellenos predeterminados */
+        * {
+            margin: 0;  /* Aquí quitaría los márgenes predeterminados */
+            padding: 0;  /* Y aqui quitavlos rellenos predeterminados */
+            box-sizing: border-box;  /* Esta parte hace que el padding no afecte el ancho total */
+            font-family: Arial, sans-serif;  /* Aquí pone una fuente básica para todo */
+        }
+        
+        /* Aqui ponemos los estilos para el cuerpo de la página */
+        body {
+            background-color: #f5f5f5;  /* Aqui de color de fondo ponemos un gris clarito */
+        }
+        
+        /* Estilos para la cabecera */
+        header {
+            background-color: #000;  /* Un fondo negro */
+            color: white;  /* Las letras blancas */
+            text-align: center;  /* El texto centrado */
+            padding: 20px 0;  /* Un poco de espacio arriba y abajo */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);  /* Y una sombra suave abajo */
+        }
+        
+        /* Estilos para el título principal */
+        header h1 {
+            font-size: 2.5em;  /* El tamaño más grande */
+            margin-bottom: 5px;  /* Y un espacio abajo */
+        }
+        
+        /* Estilos para el subtítulo */
+        header p {
+            font-size: 0.9em;  /* El tamaño al no ser el título principal más pequeño */
+            opacity: 0.8;  /* Y un poco transparente para que se diferencie un poco la letra con la del título */
+        }
+        
+        /* Contenedor principal de las tarjetas de marcas */
+        .brands-container {
+            display: flex;  /* Lo organiza en fila */
+            flex-wrap: wrap;  /* Permite que salten a siguiente línea */
+            justify-content: center;  /* Centra las tarjetas */
+            padding: 20px;  /* Un espacio interno */
+            max-width: 1200px;  /* El ancho máximo */
+            margin: 0 auto;  /* Centrado en la página */
+        }
+        
+        /* Tarjetas individuales de cada marca */
+        .brand-card {
+            background: white;  /* El fondo blanco */
+            border-radius: 10px;  /* Lo mismo que siempre, las esquinas redondeadas */
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);  /* Una sombra suave para que se vea mejor, esto lo hemos reutilizado de lo que habíamos buscado para la estética en la primera página :) */
+            margin: 15px;  /* Un espacio entre tarjetas */
+            width: calc(50% - 30px);  /* Ancho del 50% menos en los márgenes */
+            max-width: 400px;  /* El ancho máximo */
+            overflow: hidden;  /* Esto esconde lo que sobresalga, también lo hemos buscado. */
+            transition: transform 0.3s ease;  /* Animación al hacer hover, también lo hemos buscado, por estética sobre todo. */
+            text-decoration: none;  /* Quita el subrayado de los enlaces */
+            display: block;  /* Para que se pongan en bloque */
+            color: inherit;  /* Hereda el color de texto */
+        }
+        
+        /* Efecto al pasar el ratón sobre una tarjeta */
+        .brand-card:hover {
+            transform: translateY(-5px);  /* Lo sube un poco, también lo hemos buscado por estética :) */
+        }
+        
+        /* Imagen de la marca */
+        .brand-image {
+            width: 100%;  /* Así ocupa todo el ancho */
+            height: 200px;  /* Le metemos la altura fija */
+            object-fit: cover;  /* Ajusta la imagen sin deformarla */
+        }
+        
+        /* Nombre de la marca */
+        .brand-name {
+            text-align: center;  /* Centra el texto */
+            padding: 15px;  /* Un poco de espacio interno */
+            font-size: 1.3em;  /* Para el tamaño de la letra */
+            color: #333;  /* Y un color de texto oscuro */
+        }
+        
+        /* Estilos para las pantallas pequeñas (móviles) */
+        @media (max-width: 768px) {
+            .brand-card {
+                width: calc(100% - 30px);  /* Ocupa todo el ancho menos márgenes, también lo hemos buscado :) */
+            }
+        }
+    </style>
+</head>
+<body>  
+    <header>
+        <h1>GANGA CAR</h1>  <!-- El título principal -->
+        <p>(HAGA CLICK EN LA FOTO DE LA MARCA PARA VER LOS COCHES)</p>  <!-- Le ponemos la instrucción para el usuario -->
+    </header>
+    <!-- Este es el contenedor principal de las marcas de coches -->
+    <div class="brands-container">
+        <a href="Audi/Audi.html" class="brand-card"> <!-- Esta es la ruta para que después una vez pinches en la tarjeta de audi te envíe a los coches que hay de audi -->
+            <img src="audi-r8.webp" alt="Audi" class="brand-image">  <!-- La imagen del coche de audi-->
+            <div class="brand-name">Audi</div> <!-- Nombre de audi -->
+        </a>
+        <a href="Mercedes/Mercedes.html" class="brand-card">  <!-- Esta es la ruta para que después una vez pinches en la tarjeta de mercedes te envíe a los coches que hay de mercedes -->
+            <img src="0b325a581bbefb9994d94efc91277ba9.webp" alt="Mercedes" class="brand-image">  <!-- La imagen del coche de mercedes-->
+            <div class="brand-name">Mercedes</div>  <!-- Nombre de mercedes -->
+        </a>
+        <a href="BMW/BMW.html" class="brand-card">  <!-- Esta es la ruta para que después una vez pinches en la tarjeta de bmw te envíe a los coches que hay de bmw -->
+            <img src="istockphoto-1435226078-612x612.jpg" alt="BMW" class="brand-image">  <!-- La imagen del coche de bmw-->
+            <div class="brand-name">BMW</div>  <!-- Nombre de bmw -->
+        </a>
+        <a href="Nissan/Nissan.html" class="brand-card">  <!-- Esta es la ruta para que después una vez pinches en la tarjeta de nissan te envíe a los coches que hay de nissan -->
+            <img src="2019-nissan-sentra-nismo-Thumbnail.jpg.ximg.l_6_m.smart.webp" alt="Nissan" class="brand-image">  <!-- La imagen del coche de nissan-->
+            <div class="brand-name">Nissan</div>  <!-- Nombre de nissan -->
+        </a>
+    </div>
+</body>
+</html>

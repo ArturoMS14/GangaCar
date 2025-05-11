@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audi - GANGA CAR</title>
+    <style>
+
+        /* USAMOS EL MISMO CÓDIGO PARA CADA MARCA DE COCHE, LO ÚNICO QUE CAMBIA SON LOS DATOS DE LOS COCHES, PERO ESO NO ES NINGUNA FUNCIÓN DIFERENTE. ¡LA ÚNICA QUE ESTÁ COMENTADA ES LA DE LA MARCA DE MERCEDES! */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+        }
+        
+        header {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            z-index: 100;
+            text-decoration: none;
+        }
+        
+        .filter-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            z-index: 100;
+        }
+        
+        .cars-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .car-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .car-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .car-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #eee;
+        }
+        
+        .car-info {
+            padding: 20px;
+        }
+        
+        .car-name {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .car-price {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #d50000;
+            margin-bottom: 15px;
+        }
+        
+        .car-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .detail-item span:first-child {
+            font-weight: bold;
+            margin-right: 5px;
+            color: #555;
+        }
+        
+        .stock {
+            text-align: center;
+            padding: 8px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .filter-sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 250px;
+            height: 100%;
+            background-color: white;
+            padding: 20px;
+            padding-top: 80px;
+            transition: left 0.3s ease;
+            z-index: 99;
+            overflow-y: auto;
+        }
+        
+        .filter-sidebar.active {
+            left: 0;
+        }
+        
+        .filter-section {
+            margin-bottom: 20px;
+        }
+        
+        .filter-section h3 {
+            margin-bottom: 10px;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        
+        .filter-options label {
+            display: block;
+            margin: 8px 0;
+            cursor: pointer;
+        }
+        
+        .filter-options input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .price-range {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .apply-filters-btn {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .buy-btn {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            width: 100%;
+            margin-top: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .buy-btn:hover {
+            background-color: #333;
+        }
+        
+
+        .confirmation-cartel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .cartel-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .cartel-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .cartel-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        
+        .confirm-btn {
+            background-color: #d50000;
+            color: white;
+        }
+        
+        .cancel-btn {
+            background-color: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>AUDI - GANGA CAR</h1>
+    </header>
+    <button class="filter-button" id="filterBtn">FILTROS</button>
+    <a href="../Busqueda_Coches.html" class="back-button">VOLVER</a>
+    
+    <div class="filter-sidebar" id="filterSidebar">
+        <div class="filter-section">
+            <h3>Precio máximo (€)</h3>
+            <input type="range" id="priceRange" min="1000" max="100000" step="1000" value="100000">
+            <div id="priceValue" style="margin-bottom: 10px; color: #333;">Precio máximo seleccionado: 100.000€</div>
+            <div class="price-range">
+                <span>1.000€</span>
+                <span>100.000€</span>
+            </div>
+        </div>
+        
+        <div class="filter-section">
+            <h3>Color</h3>
+            <div class="filter-options">
+                <label><input type="checkbox" name="color" value="blanco"> Blanco</label>
+                <label><input type="checkbox" name="color" value="negro"> Negro</label>
+                <label><input type="checkbox" name="color" value="gris"> Gris</label>
+                <label><input type="checkbox" name="color" value="rojo"> Rojo</label>
+                <label><input type="checkbox" name="color" value="verde"> Verde</label>
+                <label><input type="checkbox" name="color" value="azul"> Azul</label>
+                <label><input type="checkbox" name="color" value="otro"> Otro</label>
+            </div>
+        </div>
+        
+        <div class="filter-section">
+            <h3>Puertas</h3>
+            <div class="filter-options">
+                <label><input type="checkbox" name="doors" value="3"> 3 puertas</label>
+                <label><input type="checkbox" name="doors" value="5"> 5 puertas</label>
+            </div>
+        </div>
+        
+        <div class="filter-section">
+            <h3>Tipo de coche</h3>
+            <div class="filter-options">
+                <label><input type="checkbox" name="type" value="deportivo"> Deportivo</label>
+                <label><input type="checkbox" name="type" value="familiar"> Familiar</label>
+                <label><input type="checkbox" name="type" value="todoterreno"> Todoterreno</label>
+                <label><input type="checkbox" name="type" value="descapotable"> Descapotable</label>
+            </div>
+        </div>
+        
+        <button class="apply-filters-btn" id="applyFiltersBtn">APLICAR FILTROS</button>
+    </div>
+    
+    <div class="confirmation-cartel" id="confirmationCartel">
+        <div class="cartel-content">
+            <h3>¿Estás seguro de que quieres comprar este coche?</h3>
+            <div class="cartel-buttons">
+                <button class="cartel-btn confirm-btn" id="confirmBuyBtn">Aceptar</button>
+                <button class="cartel-btn cancel-btn" id="cancelBuyBtn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="cars-container">
+        <!-- Audi A1 Sportback -->
+        <div class="car-card" data-price="14000" data-color="verde" data-doors="5" data-type="familiar">
+            <img src="Ausi.jpg" alt="Audi A1 Sportback" class="car-image">
+            <div class="car-info">
+                <h2 class="car-name">Audi A1 Sportback</h2>
+                <div class="car-price">14.000€</div>
+                <div class="car-details">
+                    <div class="detail-item">
+                        <span>Color:</span>
+                        <span>Verde</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Puertas:</span>
+                        <span>5</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Tipo:</span>
+                        <span>Familiar</span>
+                    </div>
+                </div>
+                <div class="stock" id="stock-a1">Stock: 24 unidades</div>
+                <button class="buy-btn" data-car="a1">Comprar</button>
+            </div>
+        </div>
+        <!-- Audi S3 Sportback -->
+        <div class="car-card" data-price="34000" data-color="azul" data-doors="5" data-type="familiar">
+            <img src="audi-s3.jpg" alt="Audi S3 Sportback" class="car-image">
+            <div class="car-info">
+                <h2 class="car-name">Audi S3 Sportback</h2>
+                <div class="car-price">34.000€</div>
+                <div class="car-details">
+                    <div class="detail-item">
+                        <span>Color:</span>
+                        <span>Azul</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Puertas:</span>
+                        <span>5</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Tipo:</span>
+                        <span>Familiar</span>
+                    </div>
+                </div>
+                <div class="stock" id="stock-s3">Stock: 17 unidades</div>
+                <button class="buy-btn" data-car="s3">Comprar</button>
+            </div>
+        </div>
+        <!-- Audi S e-tron GT -->
+        <div class="car-card" data-price="65000" data-color="gris" data-doors="5" data-type="deportivo">
+            <img src="audi-etron-gt.jpg" alt="Audi S e-tron GT" class="car-image">
+            <div class="car-info">
+                <h2 class="car-name">Audi S e-tron GT</h2>
+                <div class="car-price">65.000€</div>
+                <div class="car-details">
+                    <div class="detail-item">
+                        <span>Color:</span>
+                        <span>Gris</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Puertas:</span>
+                        <span>5</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Tipo:</span>
+                        <span>Deportivo</span>
+                    </div>
+                </div>
+                <div class="stock" id="stock-etron">Stock: 4 unidades</div>
+                <button class="buy-btn" data-car="etron">Comprar</button>
+            </div>
+        </div>
+        <!-- Audi Q6 e-tron -->
+        <div class="car-card" data-price="35000" data-color="negro" data-doors="5" data-type="todoterreno">
+            <img src="audi-q6.jpg" alt="Audi Q6 e-tron" class="car-image">
+            <div class="car-info">
+                <h2 class="car-name">Audi Q6 e-tron</h2>
+                <div class="car-price">35.000€</div>
+                <div class="car-details">
+                    <div class="detail-item">
+                        <span>Color:</span>
+                        <span>Negro</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Puertas:</span>
+                        <span>5</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Tipo:</span>
+                        <span>Todoterreno</span>
+                    </div>
+                </div>
+                <div class="stock" id="stock-q6">Stock: 14 unidades</div>
+                <button class="buy-btn" data-car="q6">Comprar</button>
+            </div>
+        </div>
+        <!-- Audi RS 7 Sportback -->
+        <div class="car-card" data-price="80000" data-color="rojo" data-doors="5" data-type="deportivo">
+            <img src="audi-rs7.jpg" alt="Audi RS 7 Sportback" class="car-image">
+            <div class="car-info">
+                <h2 class="car-name">Audi RS 7 Sportback</h2>
+                <div class="car-price">80.000€</div>
+                <div class="car-details">
+                    <div class="detail-item">
+                        <span>Color:</span>
+                        <span>Rojo</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Puertas:</span>
+                        <span>5</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Tipo:</span>
+                        <span>Deportivo</span>
+                    </div>
+                </div>
+                <div class="stock" id="stock-rs7">Stock: 1 unidad</div>
+                <button class="buy-btn" data-car="rs7">Comprar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        const filterBtn = document.getElementById('filterBtn');
+        const filterSidebar = document.getElementById('filterSidebar');
+        const priceRange = document.getElementById('priceRange');
+        const priceValue = document.getElementById('priceValue');
+        const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+        const carCards = document.querySelectorAll('.car-card');
+        const confirmationCartel = document.getElementById('confirmationCartel');
+        const confirmBuyBtn = document.getElementById('confirmBuyBtn');
+        const cancelBuyBtn = document.getElementById('cancelBuyBtn');
+        const buyButtons = document.querySelectorAll('.buy-btn');
+
+        let currentCarId = null;
+        let stockElements = {
+            'a1': document.getElementById('stock-a1'),
+            's3': document.getElementById('stock-s3'),
+            'etron': document.getElementById('stock-etron'),
+            'q6': document.getElementById('stock-q6'),
+            'rs7': document.getElementById('stock-rs7')
+        };
+
+        filterBtn.addEventListener('click', function() {
+            const isActive = filterSidebar.classList.toggle('active');
+            filterBtn.textContent = isActive ? '' : 'FILTROS';
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!filterSidebar.contains(event.target) && event.target !== filterBtn && event.target !== applyFiltersBtn) {
+                filterSidebar.classList.remove('active');
+                filterBtn.textContent = 'FILTROS';
+            }
+        });
+
+        function updatePriceDisplay() {
+            const value = parseInt(priceRange.value).toLocaleString('es-ES');
+            priceValue.textContent = `Precio máximo seleccionado: ${value}€`;
+        }
+
+        priceRange.value = 100000;
+        updatePriceDisplay();
+        priceRange.addEventListener('input', updatePriceDisplay);
+
+        applyFiltersBtn.addEventListener('click', function() {
+
+            const maxPrice = parseInt(priceRange.value);
+            const selectedColors = Array.from(document.querySelectorAll('input[name="color"]:checked')).map(el => el.value);
+            const selectedDoors = Array.from(document.querySelectorAll('input[name="doors"]:checked')).map(el => el.value);
+            const selectedTypes = Array.from(document.querySelectorAll('input[name="type"]:checked')).map(el => el.value);
+
+            const filters = {
+                maxPrice,
+                colors: selectedColors,
+                doors: selectedDoors,
+                types: selectedTypes
+            };
+
+            localStorage.setItem('carFilters', JSON.stringify(filters));
+
+            location.reload();
+        });
+
+        function applyStoredFilters() {
+            const filters = JSON.parse(localStorage.getItem('carFilters'));
+            if (!filters) return;
+
+
+            carCards.forEach(card => {
+                const price = parseInt(card.dataset.price);
+                const color = card.dataset.color;
+                const doors = card.dataset.doors;
+                const type = card.dataset.type;
+
+                const priceMatch = price <= filters.maxPrice;
+                const colorMatch = filters.colors.length === 0 || filters.colors.includes(color);
+                const doorsMatch = filters.doors.length === 0 || filters.doors.includes(doors);
+                const typeMatch = filters.types.length === 0 || filters.types.includes(type);
+
+                if (priceMatch && colorMatch && doorsMatch && typeMatch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (filters) {
+                priceRange.value = filters.maxPrice;
+                updatePriceDisplay();
+
+                document.querySelectorAll('input[name="color"]').forEach(input => {
+                    input.checked = filters.colors.includes(input.value);
+                });
+
+                document.querySelectorAll('input[name="doors"]').forEach(input => {
+                    input.checked = filters.doors.includes(input.value);
+                });
+
+                document.querySelectorAll('input[name="type"]').forEach(input => {
+                    input.checked = filters.types.includes(input.value);
+                });
+            }
+        }
+
+
+        function updateStock(carId) {
+            const stockElement = stockElements[carId];
+            if (!stockElement) return;
+            
+
+            const stockText = stockElement.textContent;
+            const stockMatch = stockText.match(/(\d+)/);
+            
+            if (stockMatch) {
+                let currentStock = parseInt(stockMatch[1]);
+                if (currentStock > 0) {
+                    currentStock--;
+
+                    if (currentStock === 1) {
+                        stockElement.textContent = `Stock: ${currentStock} unidad`;
+                    } else {
+                        stockElement.textContent = `Stock: ${currentStock} unidades`;
+                    }
+
+                    if (currentStock === 0) {
+                        document.querySelector(`.buy-btn[data-car="${carId}"]`).disabled = true;
+                    }
+                }
+            }
+        }
+
+        buyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                currentCarId = this.getAttribute('data-car');
+                confirmationCartel.style.display = 'flex';
+            });
+        });
+
+        confirmBuyBtn.addEventListener('click', function() {
+            if (currentCarId) {
+                updateStock(currentCarId);
+            }
+            confirmationCartel.style.display = 'none';
+        });
+
+        cancelBuyBtn.addEventListener('click', function() {
+            confirmationCartel.style.display = 'none';
+        });
+
+        confirmationCartel.addEventListener('click', function(e) {
+            if (e.target === confirmationCartel) {
+                confirmationCartel.style.display = 'none';
+            }
+        });
+
+        applyStoredFilters();
+    </script>
+</body>
+</html>

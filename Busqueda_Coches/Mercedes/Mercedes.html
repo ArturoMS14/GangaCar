@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercedes - GANGA CAR</title>
+    <style>
+
+        /* Esto es una forma que hemos usado para resetear todos los elementos y así no tengan los márgenes ni los rellenos predeterminados */
+        * {
+            margin: 0;  /* Aquí quitaría los márgenes predeterminados */
+            padding: 0;  /* Y aqui quitavlos rellenos predeterminados */
+            box-sizing: border-box;  /* Esta parte hace que el padding no afecte el ancho total */
+            font-family: Arial, sans-serif;  /* Aquí pone una fuente básica para todo */
+        }
+        
+        /* Aqui ponemos los estilos para el cuerpo de la página */
+        body {
+            background-color: #f5f5f5;  /* Aqui de color de fondo ponemos un gris clarito */
+        }
+        
+        /* Estilos para la cabecera */
+        header {
+            background-color: #000;  /* Un fondo negro */
+            color: white;  /* Las letras blancas */
+            text-align: center;  /* El texto centrado */
+            padding: 20px 0;  /* Un poco de espacio arriba y abajo */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);  /* Y una sombra suave abajo */
+        }
+        
+        /* Estilos para el título principal */
+        header h1 {
+            font-size: 2.5em;  /* El tamaño más grande */
+            margin-bottom: 5px;  /* Y un espacio abajo */
+        }
+        
+        .back-button {
+            position: fixed;  /* Pone el botón en una posición sin que se mueva al hacer scroll */
+            top: 20px;   /* Lo pone 20 píxeles desde arriba */
+            right: 20px;  /* Lo pone 20 píxeles desde la derecha */
+            background-color: #000;  /* Fondo negro */
+            color: white;  /* El texto del botón en blanco */
+            border: none;  /* Quita los bordes del botón */
+            padding: 10px 15px;  /* Espacio interno del botón */
+            border-radius: 5px;  /* Bordes redondeados como en todo el proyecto */
+            cursor: pointer;  /* Hace que el cursor cambie a la mano cuando pasas encima */
+            font-size: 1.1em;   /* Tamaño de letra un poco más grande para que se lea bien */
+            z-index: 100;  /* Lo pone por encima de otros elementos (por si se cruza con algo) */
+            text-decoration: none;  /* Quita el subrayado */
+        }
+        
+        /* Botón para mostrar/ocultar filtros */
+        .filter-button {
+            position: fixed;  /* Aqui hacemos que se quede fijo en la pantalla */
+            top: 20px;  /* Le metemos 20px desde arriba */
+            left: 20px;  /* y Aqui lo mismo (20px) desde la izquierda */
+            background-color: #000;  /* Ponemos el fondo negro */
+            color: white;  /* Y la letras blancas */
+            border: none;  /* No hay borde */
+            padding: 10px 15px;  /* Le ponemos espacio interno */
+            border-radius: 5px;  /* Y para seguir con el mismo estilo que en la primera página ponemos las esquinas redondeadas */
+            cursor: pointer;  /* Esta parte cambia el cursor al pasar */
+            font-size: 1.1em;  /* El tamaño de la letra */
+            z-index: 100;  /* Esto es para que esté por encima de otros elementos */
+        }
+                
+        .cars-container {
+            
+            display: grid;  /* Usa grid para acomodar los autos en filas y columnas */
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));  /* Crea columnas que se llenan automáticamente con mínimo 300px y máximo todo el espacio posible */
+            gap: 25px;  /* Deja un espacio de 25px entre los autos */
+            padding: 30px;  /* Espacio interno de 30px alrededor del contenedor */
+            max-width: 1400px;  /* No deja que el contenedor se pase de 1400px de ancho */
+            margin: 0 auto;  /* Centra el contenedor horizontalmente en la página */
+        }
+
+        .car-card {
+            
+            background: white;  /* Fondo blanco para que se vea limpio */
+            border-radius: 10px;  /* Bordes redondeados de 10px para que no se vean cuadrados duros */
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1); /* Sombra leve para que parezca que flota un poco */
+            overflow: hidden;  /* Si hay cosas que se salen, las esconde */
+
+            /* Hace que los cambios de transformación se animen suave en 0.3 segundos */
+            transition: transform 0.3s ease;
+        }
+
+        .car-card:hover {
+            /* Cuando pasas el mouse encima, se mueve un poco hacia arriba */
+            transform: translateY(-5px);
+        }
+
+        .car-image {
+            
+            width: 100%;  /* Imagen que ocupa todo el ancho */
+            height: 200px;  /* Altura fija de 200px para todas las imágenes */
+            object-fit: cover;  /* Ajusta la imagen para que llene el espacio sin deformarse */
+            background-color: #eee;  /* Pone un fondo gris clarito por si la imagen no carga */
+        }
+
+        .car-info {
+
+            padding: 20px;  /* Espacio interno de 20px para el contenido del coche */
+        }
+
+        .car-name {
+            
+            font-size: 1.4em;  /* Letra más grande para el nombre del coche */
+            margin-bottom: 10px;  /* Espacio abajo del nombre */
+            color: #333;  /* Color gris oscuro para que se vea bien */
+        }
+
+        .car-price {
+           
+            font-size: 1.3em;  /* Tamaño de letra un poco más grande que el normal */
+            font-weight: bold;  /* Negrita para que resalte el precio */
+            color: #d50000;  /* Color rojo fuerte para que el precio llame la atención */
+            margin-bottom: 15px;  /* Espacio abajo del precio */
+        }
+
+        .car-details {
+            
+            display: grid;  /* Usa grid para los detalles tipo color, puertas, etc. */
+            grid-template-columns: 1fr 1fr;  /* Divide en dos columnas iguales */
+            gap: 10px;  /* Espacio de 10px  */
+            margin-bottom: 15px;  /* Espacio debajo de los detalles */
+        }
+
+        .detail-item {
+           
+            display: flex;  /* Pone los íconos y textos en fila, no uno debajo del otro */
+            align-items: center;  /* Centra los ítems */
+        }
+
+        .detail-item span:first-child {
+            
+            font-weight: bold;  /* El primer texto va en negrita */
+            margin-right: 5px;  /* Espacio a la derecha para separarlo del valor */
+            color: #555;  /* Color gris medio para diferenciarlo del resto */
+        }
+
+        .stock {
+            
+            text-align: center;  /* Centra el texto que dice cuántos quedan en stock */
+            padding: 8px;  /* Espacio interno */
+            background-color: #f0f0f0;  /* Fondo gris  */
+            border-radius: 4px;  /* Bordes redondeados */
+            font-weight: bold;  /* En negrita */
+        }
+        
+        /* La barra lateral de los filtros */
+       .filter-sidebar {
+            position: fixed;  /* Ponemos la posición fija */
+            top: 0;  /* Para ponerlo arriba del todo */
+            left: -300px;  /* Que este fuera de la pantalla inicialmente y así solo si el usuario pincha en la palabra "FILTROS" le sale la ventana */
+            width: 250px;  /* Le ponemos un ancho de 250px */
+            height: 100%;  /* La altura completa */
+            background-color: white;  /* Un fondo blanco */
+            padding: 20px;  /* El espacio interno */
+            padding-top: 80px;  /* Le metemos más espacio arriba para el botón */
+            transition: left 0.3s ease;  /* Una animación suave al moverse */
+            z-index: 99;  /* Por debajo del botón pero encima del contenido */
+        }
+        
+        /* Esto se añade cuando la barra lateral está visible */
+        .filter-sidebar.active {
+            left: 0;  /* Se muestra en la pantalla */
+        }
+        
+        /* Cada sección de filtros */
+        .filter-section {
+            margin-bottom: 20px;  /* El espacio entre secciones */
+        }
+        
+        /* Títulos de las secciones de filtros */
+        .filter-section h3 {
+            margin-bottom: 10px;  /* Un poco de espacio abajo */
+            color: #333;  /* El color de texto que sea oscuro */
+            border-bottom: 1px solid #eee;  /* Una línea para dividir */
+            padding-bottom: 5px;  /* El espacio entre texto y línea */
+        }
+        
+        /* Opciones de filtro */
+        .filter-options label {
+            display: block;  /* Cada etiqueta en su propia línea */
+            margin: 8px 0;  /* Ponemos espacio entre opciones */
+            cursor: pointer;  /* Esto cambia el cursor al pasar */
+        }
+        
+        /* Estilo para los controles deslizantes */
+        .filter-options input[type="range"] {
+            width: 100%;  /* Para que ocupe todo el ancho */
+            margin: 10px 0;  /* Le metemos espacio arriba y abajo */
+        }
+        
+        /* Contenedor para mostrar los valores del rango de precios */
+        .price-range {
+            display: flex;  /* Organiza los elementos en línea */
+            justify-content: space-between;  /* Le metemos un espacio entre ellos */
+            font-size: 0.9em;  /* El tamaño de la letra pequeño */
+            color: #666;  /* Y un color gris */
+        }
+        
+        .apply-filters-btn {
+            
+            background-color: #000;  /* Fondo negro porque resalta */
+            color: white;  /* Texto en blanco */
+            border: none;  /* Le quita los bordes  por defecto */
+            padding: 10px 15px;  /* Espacio interno */
+            border-radius: 5px;  /* Bordes redondeados */
+            cursor: pointer;  /* Cambia el cursor a una mano cuando pasas el mouse */
+            font-size: 1.1em;  /* Letra un poco más grande */
+            width: 100%;  /* Ocupa todo el ancho */
+            margin-top: 10px;  /* Deja un espacio arriba del botón para que no esté pegado a lo de arriba */
+        }
+
+        /* Estilos para el botón de comprar */
+        .buy-btn {
+            background-color: #000;  /* Fondo negro porque resalta */
+            color: white;  /* Texto en blanco */
+            border: none;  /* Le quita los bordes  por defecto */
+            padding: 10px 15px;  /* Espacio interno */
+            border-radius: 5px;  /* Bordes redondeados */
+            cursor: pointer;  /* Cambia el cursor a una mano cuando pasas el mouse */
+            font-size: 1.1em;  /* Letra un poco más grande */
+            width: 100%;  /* Ocupa todo el ancho */
+            margin-top: 5px;  /* Deja un espacio arriba del botón para que no esté pegado a lo de arriba */
+            transition: background-color 0.3s;  /*Hace que cuando cambie el color de fondo, lo haga suave en 0.3 segundos y no de golpe */
+        }
+        
+        .buy-btn:hover {
+            background-color: #333;  /* Fondo negro porque resalta */
+        }
+        
+        .confirmation-cartel {
+            display: none; /* El cartel está escondido por defecto, no se ve */
+            position: fixed; /* Se queda fijo en la pantalla aunque hagas scroll */
+            top: 0; /* Empieza desde arriba de la pantalla */
+            left: 0; /* Empieza desde la izquierda de la pantalla */
+            width: 100%; /* Ocupa todo el ancho de la pantalla */
+            height: 100%; /* Ocupa toda la altura de la pantalla */
+            background-color: rgba(0,0,0,0.5); /* Fondo semi transparente negro */
+            z-index: 1000; /* Se pone por encima de todo lo demás */
+            justify-content: center; /* Centra el contenido horizontalmente */
+            align-items: center; /* Centra el contenido verticalmente */
+        }
+
+        .cartel-content {
+            background-color: white; /* Fondo blanco para el contenido */
+            padding: 20px; /* Espacio interno de 20px */
+            border-radius: 10px; /* Esquinas redondeadas */
+            width: 90%; /* Ocupa el 90% del ancho disponible */
+            max-width: 400px; /* Pero no más de 400px de ancho */
+            text-align: center; /* El texto dentro va centrado */
+        }
+
+        .cartel-buttons {
+            display: flex; /* Los botones se muestran en línea */
+            justify-content: center; /* Centrados horizontalmente */
+            gap: 15px; /* Espacio de 15px entre los botones */
+            margin-top: 20px; /* Margen superior de 20px */
+        }
+
+        .cartel-btn {
+            padding: 10px 20px; /* Espacio interno arriba/abajo 10px, izquierda/derecha 20px */
+            border: none; /* Sin bordes */
+            border-radius: 5px; /* Esquinas redondeadas */
+            cursor: pointer; /* El cursor cambia a mano cuando pasas por encima */
+            font-size: 1em; /* Tamaño de letra normal */
+        }
+
+        .confirm-btn {
+            background-color: #d50000; /* Fondo rojo para el botón de confirmar */
+            color: white; /* Letras blancas */
+        }
+
+        .cancel-btn {
+            background-color: #333; /* Fondo gris oscuro para el botón de cancelar */
+            color: white; /* Letras blancas */
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <h1>MERCEDES - GANGA CAR</h1>
+    </header>
+    <!-- Botón para mostrar y ocultar los filtros -->
+    <button class="filter-button" id="filterBtn">FILTROS</button>  <!-- Botón con clase y ID para javascript -->
+    <a href="../Busqueda_Coches.html" class="back-button">VOLVER</a> <!-- Botón de VOLVER, el cual vuelve a la página de las marcas de coches -->
+    
+    <!-- Barra lateral de filtros (que al principio está oculta y hasta que no pinches encima no se ve) -->
+    <div class="filter-sidebar" id="filterSidebar">
+        <!-- El filtro para elegir el precio más o menos de lo que quieres gastarte en el coche -->
+        <div class="filter-section">
+            <h3>Precio (€)</h3>  <!-- Título "Precio" -->
+            <!-- Control deslizante para que así los usuarios puedan elegir un intervalo del precio del coche. -->
+            <input type="range" id="priceRange" min="1000" max="100000" step="1000" value="100000">
+            <!-- Valor actual del rango -->
+            <div id="priceValue" style="margin-bottom: 10px; color: #333;">Precio seleccionado: 100.000€</div>
+            <!-- Muestra los valores mínimo y máximo -->
+            <div class="price-range">
+                <span>1.000€</span>  <!-- Precio mínimo -->
+                <span>100.000€</span>  <!-- Precio máximo -->
+            </div>
+        </div>
+        
+         <!-- Los filtros para elegir el color del coche -->
+         <div class="filter-section">
+            <h3>Color</h3>  <!-- Título "Color" -->
+            <div class="filter-options">
+                <label><input type="checkbox" name="color" value="blanco"> Blanco</label>
+                <label><input type="checkbox" name="color" value="negro"> Negro</label>
+                <label><input type="checkbox" name="color" value="gris"> Gris</label>
+                <label><input type="checkbox" name="color" value="rojo"> Rojo</label>
+                <label><input type="checkbox" name="color" value="verde"> Verde</label>
+                <label><input type="checkbox" name="color" value="azul"> Azul</label>
+                <label><input type="checkbox" name="color" value="otro"> Otro</label>
+            </div>
+        </div>
+        
+        <!-- El filtro para indicar cuants puertas quieres en tu coche, es decir, si quieres un coche más grande o más pequeño -->
+        <div class="filter-section">
+            <h3>Puertas</h3>  <!-- Título "Puertas" -->
+            <div class="filter-options">
+                <label><input type="checkbox" name="doors" value="3"> 3 puertas</label>
+                <label><input type="checkbox" name="doors" value="5"> 5 puertas</label>
+            </div>
+        </div>
+        
+        <!-- El filtro para elegir que tipo de coche quieres. -->
+        <div class="filter-section">
+            <h3>Tipo de coche</h3>  <!-- Título "Tipo de coche" -->
+            <div class="filter-options">
+                <label><input type="checkbox" name="type" value="deportivo"> Deportivo</label>
+                <label><input type="checkbox" name="type" value="familiar"> Familiar</label>
+                <label><input type="checkbox" name="type" value="todoterreno"> Todoterreno</label>
+                <label><input type="checkbox" name="type" value="descapotable"> Descapotable</label>
+            </div>
+        </div>
+        
+        <!-- Este botón sirve para que una vez hayas seleccionado los filtros, le pinches encima y te haga una búsqueda personalizada en torno a los filtros que hayas puesto -->
+        <button class="apply-filters-btn" id="applyFiltersBtn">APLICAR FILTROS</button> 
+    </div>
+
+    <!-- Cartel de confirmación -->
+    <div class="confirmation-cartel" id="confirmationCartel">
+        <div class="cartel-content">
+            <h3>¿Estás seguro de que quieres comprar este coche?</h3>
+            <div class="cartel-buttons">
+                <button class="cartel-btn confirm-btn" id="confirmBuyBtn">Aceptar</button>
+                <button class="cartel-btn cancel-btn" id="cancelBuyBtn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="cars-container">
+        <!-- Una tarjeta individual para cada modelo de coche -->
+        <!-- Mercedes CLA 200 d Shooting Brake -->
+        <div class="car-card" data-price="23000" data-color="azul" data-doors="5" data-type="familiar">
+
+        <!-- Aqui la imagen del coche -->
+            <img src="Mercedes.jpg" alt="Mercedes CLA 200 d Shooting Brake" class="car-image">  <!-- Imagen con clase para estilos y texto alternativo -->
+
+            <!-- Esta parte es donde ponemos la info del coche -->
+            <div class="car-info">
+                <!-- El nombre del modelo del coche -->
+                <h2 class="car-name">Mercedes CLA 200 d Shooting Brake</h2>
+                <!-- El precio del vehículo -->
+                <div class="car-price">23.000€</div>
+                <!-- Detalles técnicos en formato grid de 2 columnas -->
+                <div class="car-details">
+                    <!-- Filtro 1: Color -->
+                    <div class="detail-item">
+                        <span>Color:</span>  <!-- Etiqueta -->
+                        <span>Azul</span>   <!-- Valor -->
+                    </div>
+                    <!-- Filtro 2: Número de puertas -->
+                    <div class="detail-item">
+                        <span>Puertas:</span>
+                        <span>5</span>
+                    </div>
+                    <!-- Filtro 3: Tipo de vehículo -->
+                    <div class="detail-item">
+                        <span>Tipo:</span>
+                        <span>Familiar</span>
+                    </div>
+                </div>
+                <!-- Indicador de stock del modelo del coche -->
+                 <!-- Creamos el id del coche -->
+                <div class="stock" id="stock-cla">Stock: 18 unidades</div>
+                <!-- Confirmamos el id del coche y añadimos un botón que ponga Comprar -->
+                <button class="buy-btn" data-car="cla">Comprar</button>
+            </div>
+        </div>
+        
+        <!-- Mercedes CLE 220 d Coupé -->
+        <div class="car-card" data-price="31000" data-color="rojo" data-doors="3" data-type="deportivo">
+            <img src="Merceedes.jpg" alt="Mercedes CLE 220 d Coupé" class="car-image">
+            <div class="car-info">
+                <h2 class="car-name">Mercedes CLE 220 d Coupé</h2>
+                <div class="car-price">31.000€</div>
+                <div class="car-details">
+                    <div class="detail-item">
+                        <span>Color:</span>
+                        <span>Rojo</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Puertas:</span>
+                        <span>3</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Tipo:</span>
+                        <span>Deportivo</span>
+                    </div>
+                </div>
+                <div class="stock" id="stock-cle">Stock: 14 unidades</div>
+                <button class="buy-btn" data-car="cle">Comprar</button>
+            </div>
+        </div>
+        
+        <!-- Mercedes GLB 200 d -->
+        <div class="car-card" data-price="25000" data-color="negro" data-doors="5" data-type="todoterreno">
+            <img src="Merceeedes.jpg" alt="Mercedes GLB 200 d" class="car-image">
+            <div class="car-info">
+                <h2 class="car-name">Mercedes GLB 200 d</h2>
+                <div class="car-price">25.000€</div>
+                <div class="car-details">
+                    <div class="detail-item">
+                        <span>Color:</span>
+                        <span>Negro</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Puertas:</span>
+                        <span>5</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Tipo:</span>
+                        <span>Todoterreno</span>
+                    </div>
+                </div>
+                <div class="stock" id="stock-glb">Stock: 17 unidades</div>
+                <button class="buy-btn" data-car="glb">Comprar</button>
+            </div>
+        </div>
+        
+        <!-- Mercedes G 580 con tecnología EQ -->
+        <div class="car-card" data-price="80000" data-color="negro" data-doors="5" data-type="todoterreno">
+            <img src="Merceeeedes.jpg" alt="Mercedes G 580 con tecnología EQ" class="car-image">
+            <div class="car-info">
+                <h2 class="car-name">Mercedes G 580 con tecnología EQ</h2>
+                <div class="car-price">80.000€</div>
+                <div class="car-details">
+                    <div class="detail-item">
+                        <span>Color:</span>
+                        <span>Negro</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Puertas:</span>
+                        <span>5</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Tipo:</span>
+                        <span>Todoterreno</span>
+                    </div>
+                </div>
+                <div class="stock"  id="stock-g">Stock: 1 unidad</div>
+                <button class="buy-btn" data-car="g">Comprar</button>
+            </div>
+        </div>
+        
+        <!-- Mercedes CLE 220 d Cabrio -->
+        <div class="car-card" data-price="35000" data-color="blanco" data-doors="3" data-type="descapotable">
+            <img src="Merceeeeedes.jpg" alt="Mercedes CLE 220 d Cabrio" class="car-image">
+            <div class="car-info">
+                <h2 class="car-name">Mercedes CLE 220 d Cabrio</h2>
+                <div class="car-price">35.000€</div>
+                <div class="car-details">
+                    <div class="detail-item">
+                        <span>Color:</span>
+                        <span>Blanco</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Puertas:</span>
+                        <span>3</span>
+                    </div>
+                    <div class="detail-item">
+                        <span>Tipo:</span>
+                        <span>Descapotable</span>
+                    </div>
+                </div>
+                <div class="stock" id="stock-cle2">Stock: 3 unidades</div>
+                <button class="buy-btn" data-car="cle2">Comprar</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- SOLO HE COMENTADO EL PRIMER COCHE PORQUE LOS DEMÁS ES LO MISMO SOLO QUE CAMBIANDO EL CONTENIDO DE LOS PRECIOS... -->
+
+    <script>
+
+        // Selecciona el botón para abrir los filtros
+        const filterBtn = document.getElementById('filterBtn');
+        // Selecciona el panel lateral donde están los filtros
+        const filterSidebar = document.getElementById('filterSidebar');
+        // Selecciona el input del rango de precios
+        const priceRange = document.getElementById('priceRange');
+        // Selecciona el elemento donde se muestra el precio actual
+        const priceValue = document.getElementById('priceValue');
+        // Selecciona el botón para aplicar los filtros
+        const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+        // Selecciona todas las tarjetas de autos en la página
+        const carCards = document.querySelectorAll('.car-card');
+        // Coge el cartel de confirmación que aparece cuando vas a comprar
+        const confirmationCartel = document.getElementById('confirmationCartel');
+        // Coge el botón que confirma la compra dentro del cartel
+        const confirmBuyBtn = document.getElementById('confirmBuyBtn');
+        // Coge el botón para cancelar la compra dentro del cartel
+        const cancelBuyBtn = document.getElementById('cancelBuyBtn');
+        // Coge todos los botones de "comprar" que están en las tarjetas de los coches
+        const buyButtons = document.querySelectorAll('.buy-btn');
+
+
+        // Aquí creamos las variables para el proceso de compra
+        let currentCarId = null;
+        let stockElements = {
+            'cla': document.getElementById('stock-cla'),
+            'cle': document.getElementById('stock-cle'),
+            'glb': document.getElementById('stock-glb'),
+            'g': document.getElementById('stock-g'),
+            'cle2': document.getElementById('stock-cle2')
+        };
+
+        // Cuando se hace click en el botón de filtros, abre o cierra el panel de filtros
+        filterBtn.addEventListener('click', function() {
+            // Activa o desactiva la clase 'active' en el sidebar
+            const isActive = filterSidebar.classList.toggle('active');
+
+            // Si está activo, borra el texto del botón. Si no, pone "FILTROS"
+            filterBtn.textContent = isActive ? '' : 'FILTROS';
+        });
+
+        // Si haces click fuera del panel de filtros, lo cierra
+        document.addEventListener('click', function(event) {
+            // Si el click NO lo hace dentro del sidebar, ni en el botón de filtros, ni en el botón de aplicar, entonces lo cierra
+            if (!filterSidebar.contains(event.target) && event.target !== filterBtn && event.target !== applyFiltersBtn) {
+                filterSidebar.classList.remove('active');
+                filterBtn.textContent = 'FILTROS';
+            }
+        });
+
+        // Esta función actualiza el texto del precio que se muestra
+        function updatePriceDisplay() {
+            // Convierte el valor del input a número y lo formatea con puntos
+            const value = parseInt(priceRange.value).toLocaleString('es-ES');
+            // Cambia el texto para mostrar el precio seleccionado
+            priceValue.textContent = `Precio máximo seleccionado: ${value}€`;
+        }
+
+        // Pone el valor del rango de precio en 100000 por defecto
+        priceRange.value = 100000;
+
+        // Muestra el precio inicial en la pantalla
+        updatePriceDisplay();
+
+        // Cada vez que el usuario cambie el rango, actualiza el precio mostrado
+        priceRange.addEventListener('input', updatePriceDisplay);
+
+        // Cuando se hace click en "Aplicar filtros"
+        applyFiltersBtn.addEventListener('click', function() {
+            // Coge el valor máximo del precio
+            const maxPrice = parseInt(priceRange.value);
+
+            // Coge todos los colores que están seleccionados
+            const selectedColors = Array.from(document.querySelectorAll('input[name="color"]:checked')).map(el => el.value);
+            // Coge todas las puertas que están seleccionadas
+            const selectedDoors = Array.from(document.querySelectorAll('input[name="doors"]:checked')).map(el => el.value);
+            //Coge todos los tipos que están seleccionados
+            const selectedTypes = Array.from(document.querySelectorAll('input[name="type"]:checked')).map(el => el.value);
+            // Crea un objeto con todos los filtros seleccionados
+            const filters = {
+                maxPrice,
+                colors: selectedColors,
+                doors: selectedDoors,
+                types: selectedTypes
+            };
+
+            // Guarda los filtros en el almacenamiento del navegador
+            localStorage.setItem('mercedesFilters', JSON.stringify(filters));
+
+            // Recarga la página para aplicar los filtros guardados
+            location.reload();
+        });
+
+        // Esta función se ejecuta cuando cargas la página para aplicar los filtros guardados
+        function applyStoredFilters() {
+            // Intenta leer los filtros desde localStorage
+            const filters = JSON.parse(localStorage.getItem('mercedesFilters'));
+
+            // Si no hay filtros guardados, pone el valor por defecto y sale
+            if (!filters) {
+                priceRange.value = 100000;
+                updatePriceDisplay();
+                return;
+            }
+
+            // Revisa cada tarjeta de coche y ve si cumple con los filtros
+            carCards.forEach(card => {
+                // Coge los datos del coche desde la personalización del usuario
+                const price = parseInt(card.dataset.price);
+                const color = card.dataset.color;
+                const doors = card.dataset.doors;
+                const type = card.dataset.type;
+
+                // Comprueba si el precio está dentro del máximo
+                const priceMatch = price <= filters.maxPrice;
+
+                // Si no hay filtros de color, o el color del coche está dentro de los seleccionados
+                const colorMatch = filters.colors.length === 0 || filters.colors.includes(color);
+
+                // Igual pero con las puertas
+                const doorsMatch = filters.doors.length === 0 || filters.doors.includes(doors);
+
+                // Igual pero con el tipo de coche
+                const typeMatch = filters.types.length === 0 || filters.types.includes(type);
+
+                // Si el coche cumple con todos los filtros, lo muestra. Si no, lo esconde.
+                if (priceMatch && colorMatch && doorsMatch && typeMatch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Vuelve a poner los valores seleccionados en los inputs para que el usuario los vea marcados
+            if (filters) {
+                priceRange.value = filters.maxPrice;
+                updatePriceDisplay();
+
+                document.querySelectorAll('input[name="color"]').forEach(input => {
+                    input.checked = filters.colors.includes(input.value);
+                });
+
+                document.querySelectorAll('input[name="doors"]').forEach(input => {
+                    input.checked = filters.doors.includes(input.value);
+                });
+
+                document.querySelectorAll('input[name="type"]').forEach(input => {
+                    input.checked = filters.types.includes(input.value);
+                });
+            }
+        }
+
+        // Función para actualizar el stock
+        function updateStock(carId) {
+            const stockElement = stockElements[carId];
+            if (!stockElement) return;
+            
+            // Su funcion es extraer el número actual de stock
+            const stockText = stockElement.textContent;
+            const stockMatch = stockText.match(/(\d+)/);
+            
+            if (stockMatch) {
+                let currentStock = parseInt(stockMatch[1]);
+                if (currentStock > 0) {
+                    currentStock--;
+                    // Se encarga de actualizar el numero del stock, es decir lo va bajando de uno en uno cada compra que haya.
+                    if (currentStock === 1) {
+                        stockElement.textContent = `Stock: ${currentStock} unidad`;
+                    } else {
+                        stockElement.textContent = `Stock: ${currentStock} unidades`;
+                    }
+                    
+                    // Su función es no dejarte pulsar el botón si no hay stock
+                    if (currentStock === 0) {
+                        document.querySelector(`.buy-btn[data-car="${carId}"]`).disabled = true;
+                    }
+                }
+            }
+        }
+
+        // Se encarga de configurar los botones de compra
+        buyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                currentCarId = this.getAttribute('data-car');
+                confirmationCartel.style.display = 'flex';
+            });
+        });
+
+        // Configura el cartel de confirmación
+        confirmBuyBtn.addEventListener('click', function() {
+            if (currentCarId) {
+                updateStock(currentCarId);
+            }
+            confirmationCartel.style.display = 'none';
+        });
+        
+        // Cancelar la compra
+        cancelBuyBtn.addEventListener('click', function() {
+            confirmationCartel.style.display = 'none';
+        });
+
+        // Cerrar el cartel al hacer clic fuera del contenido
+        confirmationCartel.addEventListener('click', function(e) {
+            if (e.target === confirmationCartel) {
+                confirmationCartel.style.display = 'none';
+            }
+        });
+
+        // Ejecuta la función de aplicar filtros nada más se carga la página
+        applyStoredFilters();
+
+    </script>
+</body>
+</html>
